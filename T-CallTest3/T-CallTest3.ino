@@ -15,6 +15,8 @@
 //#define DUMP_AT_COMMANDS
 #define SMS_TARGET "+447973177615"
 #define BATT_PIN 34
+#include <ESP32AnalogRead.h>
+ESP32AnalogRead adc;
 
 
 // Define the serial console for debug prints, if needed
@@ -205,6 +207,8 @@ void setup()
     // Set GSM module baud rate and UART pins
     SerialAT.begin(115200, SERIAL_8N1, MODEM_RX, MODEM_TX);
 
+    adc.attach(34);
+
 
 }
 
@@ -276,12 +280,12 @@ void loop()
     float lipoV = milliVolts / 1000.0F;
 
     Serial.print("BATT: ");
-    Serial.println(analogRead(BATT_PIN));
+    Serial.println(adc.readVoltage());
 
         // Set 11db attenuation on BATT Pin
    analogSetPinAttenuation(BATT_PIN, ADC_11db);
 
-  float batteryV = analogRead(BATT_PIN)* 3.3 / 4095;
+  float batteryV =adc.readVoltage();
 
 
 
